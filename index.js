@@ -115,6 +115,10 @@ app.post("/acceptfriendrequest",async(req,res)=>{
 app.post('/deletefriendrequest',async(req,res)=>{
   const destroy=await FrRequest.deleteOne({_id:req.body.requestid});
 });
+app.post('/getconnections',async(req,res)=>{
+  const result=await Connection.find({user:req.body.email});
+  res.json({result:result});
+});
 app.listen(3005, async () => {
   console.log("Server Started at " + 3005);
   await connect();
