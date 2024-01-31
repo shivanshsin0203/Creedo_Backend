@@ -61,6 +61,14 @@ async function checkFriendRequest(email) {
   if (email.from === email.to) {
     return "Same_Email";
   }
+  const IsConnection = await Connection.findOne({freind_email:email.to,user:email.from});
+  if(IsConnection){
+    return "Already_Friends";
+  }
+  const IsRequestSent = await FrRequest.findOne({ to: email.to, from: email.from });
+  if (IsRequestSent) {
+    return "Request_Already_Sent";
+  }
   const result = await FrRequest.create(email);
   return "Success";
 }
@@ -93,6 +101,15 @@ app.post("/addfriend", (req, res) => {
     if (result === "Same_Email") {
       return res.json({
         message: "You cannot send request to yourself",
+        result: false,
+      });
+    }
+    if (result === "Already_Friends") {
+      return res.json({ message: "You are already friends", result: false });
+    }
+    if (result === "Request_Already_Sent") {
+      return res.json({
+        message: "Friend Request already sent",
         result: false,
       });
     }
