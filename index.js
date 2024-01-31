@@ -26,13 +26,26 @@ const UserSchema = new mongoose.Schema({
 const FriendRequestSchema = new mongoose.Schema({
   to: String,
   from: String,
+  name: String,
+  picture: {type:String,
+    default:null},
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
+const ConnectionSchema= new mongoose.Schema({
+  user:String,
+  freind_name:String,
+  freind_picture:{
+    type:String,
+    default:null
+  },
+  freind_email:String,
+});
 const User = mongoose.model("user", UserSchema);
 const FrRequest = mongoose.model("friendrequest", FriendRequestSchema);
+const Connection=mongoose.model("connection",ConnectionSchema);
 const isValidEmail = (email) => {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 };
@@ -89,7 +102,19 @@ app.post("/addfriend", (req, res) => {
   }
   check();
 });
-
+app.post("/getfriendrequests", async (req, res) => {
+  const result= await FrRequest.find({to:req.body.email});
+  res.json({result:result});
+});
+app.post("/acceptfriendrequest",async(req,res)=>{
+  const destroy=await FrRequest.deleteOne({_id:req.body.requestid});
+  const result1=await Connection.create({user:req.body.user1_email,freind_name:req.body.user2_name,freind_picture:req.body.user2_picture,freind_email:req.body.user2_email});
+  const result2=await Connection.create({user:req.body.user2_email,freind_name:req.body.user1_name,freind_picture:req.body.user1_picture,freind_email:req.body.user1_email});
+  res.json({message:"Friend Request Accepted"});
+});
+app.post('/deletefriendrequest',async(req,res)=>{
+  const destroy=await FrRequest.deleteOne({_id:req.body.requestid});
+});
 app.listen(3005, async () => {
   console.log("Server Started at " + 3005);
   await connect();
