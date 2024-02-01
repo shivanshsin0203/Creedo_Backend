@@ -12,7 +12,16 @@ const mongoUrl = process.env.mongoUrl;
 const connect = async () => {
   await mongoose.connect(mongoUrl);
 };
-
+const PostSchema = new mongoose.Schema({
+  creator: String,
+  title: String,
+  discription: String,
+  image: [String],
+  likes:{
+    type:Number,
+    default:0
+  }
+});
 const UserSchema = new mongoose.Schema({
   family_name: String,
   given_name: String,
@@ -46,6 +55,7 @@ const ConnectionSchema= new mongoose.Schema({
 const User = mongoose.model("user", UserSchema);
 const FrRequest = mongoose.model("friendrequest", FriendRequestSchema);
 const Connection=mongoose.model("connection",ConnectionSchema);
+const Post = mongoose.model("post", PostSchema);
 const isValidEmail = (email) => {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 };
@@ -135,6 +145,11 @@ app.post('/deletefriendrequest',async(req,res)=>{
 app.post('/getconnections',async(req,res)=>{
   const result=await Connection.find({user:req.body.email});
   res.json({result:result});
+});
+app.post('/createpost',async(req,res)=>{
+ 
+  const result=await Post.create(req.body);
+  res.json({message:"Post Created"});
 });
 app.listen(3005, async () => {
   console.log("Server Started at " + 3005);
