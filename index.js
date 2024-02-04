@@ -151,6 +151,16 @@ app.post('/createpost',async(req,res)=>{
   const result=await Post.create(req.body);
   res.json({message:"Post Created"});
 });
+app.post('/posts',async(req,res)=>{
+  const result=await Post.find();
+   if(result.length<req.body.posts+2)
+   {
+    res.json({data:"No More Posts"});
+   }
+    else{
+      res.json({data:result.slice(req.body.posts,req.body.posts+2)});
+    }
+});
 app.listen(3005, async () => {
   console.log("Server Started at " + 3005);
   await connect();
