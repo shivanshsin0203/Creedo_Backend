@@ -161,6 +161,10 @@ app.post('/posts',async(req,res)=>{
       res.json({data:result.slice(req.body.posts,req.body.posts+2)});
     }
 });
+app.post('/finduser',async(req,res)=>{
+  const result=await User.find({email:req.body.email});
+  res.json({result:result});
+})
 app.listen(3005, async () => {
   console.log("Server Started at " + 3005);
   await connect();
