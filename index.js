@@ -153,6 +153,7 @@ app.post('/createpost',async(req,res)=>{
 });
 app.post('/posts',async(req,res)=>{
   const result=await Post.find();
+  result.reverse();
    if(result.length<req.body.posts+2)
    {
     res.json({data:"No More Posts"});
@@ -164,6 +165,10 @@ app.post('/posts',async(req,res)=>{
 app.post('/finduser',async(req,res)=>{
   const result=await User.find({email:req.body.email});
   res.json({result:result});
+})
+app.post('/updatelike',async(req,res)=>{
+  const result=await Post.findByIdAndUpdate(req.body.id,{$inc:{likes:1}});
+  res.json({message:"Like Updated"});
 })
 app.listen(3005, async () => {
   console.log("Server Started at " + 3005);
