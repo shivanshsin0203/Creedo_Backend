@@ -170,6 +170,10 @@ app.post('/updatelike',async(req,res)=>{
   const result=await Post.findByIdAndUpdate(req.body.id,{$inc:{likes:1}});
   res.json({message:"Like Updated"});
 })
+app.post('/getpostbyid',async(req,res)=>{
+  const result=await Post.findById(req.body.id);
+  res.json({result:result});
+})
 app.listen(3005, async () => {
   console.log("Server Started at " + 3005);
   await connect();
