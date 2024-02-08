@@ -22,6 +22,15 @@ const PostSchema = new mongoose.Schema({
     default:0
   }
 });
+const CommnetSchema = new mongoose.Schema({
+  postid: String,
+  comment: String,
+  creator: String,
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
 const UserSchema = new mongoose.Schema({
   family_name: String,
   given_name: String,
@@ -56,6 +65,7 @@ const User = mongoose.model("user", UserSchema);
 const FrRequest = mongoose.model("friendrequest", FriendRequestSchema);
 const Connection=mongoose.model("connection",ConnectionSchema);
 const Post = mongoose.model("post", PostSchema);
+const Comment= mongoose.model("comment", CommnetSchema);
 const isValidEmail = (email) => {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 };
@@ -172,6 +182,14 @@ app.post('/updatelike',async(req,res)=>{
 })
 app.post('/getpostbyid',async(req,res)=>{
   const result=await Post.findById(req.body.id);
+  res.json({result:result});
+})
+app.post('/addcomment',async(req,res)=>{
+  const result=await Comment.create(req.body);
+  res.json({message:"Comment Added"});
+})
+app.post('/getcomments',async(req,res)=>{
+  const result=await Comment.find({postid:req.body.postid});
   res.json({result:result});
 })
 app.listen(3005, async () => {
