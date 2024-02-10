@@ -192,6 +192,14 @@ app.post('/getcomments',async(req,res)=>{
   const result=await Comment.find({postid:req.body.postid});
   res.json({result:result});
 })
+app.post('/isfriend',async(req,res)=>{
+  const result=await Connection.findOne({user:req.body.user,freind_email:req.body.freind});
+  if(result){
+    res.json({result:true});
+  }
+  else{
+    res.json({result:false});
+  }});
 app.listen(3005, async () => {
   console.log("Server Started at " + 3005);
   await connect();
