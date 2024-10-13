@@ -221,6 +221,9 @@ app.post("/getpostbymail", async (req, res) => {
   const result = await Post.find({ creator: req.body.email });
   res.json({ result: result });
 });
+app.get("/test",async(req,res)=>{
+ res.json({message:"Hello World"})
+})
 app.listen(3005, async () => {
   console.log("Server Started at " + 3005);
   await connect();
